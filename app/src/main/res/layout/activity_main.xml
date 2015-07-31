@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GrTemplate"
+    android:id="@+id/mainlayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host Name"
+        android:id="@+id/hostNameTextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/hostNameEditText"
+        android:textSize="@dimen/EditTextSize"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hostNameEditText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/hostNameTextView"
+        android:inputType="text"
+        android:text="localhost" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Port Number"
+        android:id="@+id/portNumTextView"
+        android:textSize="@dimen/EditTextSize"
+        android:textStyle="bold"
+        android:layout_below="@+id/hostNameEditText"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/portNumEditText"
+        android:layout_below="@+id/hostNameEditText"
+        android:layout_alignEnd="@+id/hostNameEditText"
+        android:layout_toEndOf="@+id/portNumTextView"
+        android:text="9090"
+        android:inputType="number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Period (ms)"
+        android:id="@+id/updatePeriodTextView"
+        android:textSize="@dimen/EditTextSize"
+        android:textStyle="bold"
+        android:layout_below="@+id/portNumEditText"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/updatePeriodEditText"
+        android:layout_below="@+id/portNumEditText"
+        android:layout_alignEnd="@+id/portNumEditText"
+        android:layout_toEndOf="@+id/updatePeriodTextView"
+        android:text="1000"
+        android:inputType="number" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:id="@+id/connectButton"
+        android:layout_below="@+id/updatePeriodEditText"
+        android:layout_alignParentStart="true"
+        android:onClick="sendOnClick" />
+
+</RelativeLayout>
