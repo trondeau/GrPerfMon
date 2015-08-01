@@ -3,6 +3,7 @@ package org.gnuradio.grperfmon;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,8 +11,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.androidplot.ui.SeriesRenderer;
@@ -21,15 +22,17 @@ import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYStepMode;
 
 import org.gnuradio.grcontrolport.RPCConnection;
 import org.gnuradio.grcontrolport.RPCConnectionThrift;
 
 import java.lang.reflect.Array;
 import java.text.FieldPosition;
+import java.text.Format;
+import java.text.MessageFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -111,6 +114,43 @@ public class PerfMon extends Activity {
         }
     }
 
+
+    private class XLabelFormatter extends Format {
+        private String[] mLabels = {};
+        private int mMaxStrLen;
+
+        @Override
+        public StringBuffer format(Object object, StringBuffer buffer, FieldPosition field)
+        {
+            int parsedInt =  Math.round(Float.parseFloat(object.toString()));
+            if(parsedInt < 0)
+                return buffer;
+            String labelString = mLabels[parsedInt];
+            buffer.append(labelString);
+            return buffer;
+        }
+
+        @Override
+        public Object parseObject(String string, ParsePosition position) {
+            return java.util.Arrays.asList(mLabels).indexOf(string);
+        }
+
+        public void setLabels(List<String> newLables) {
+            mMaxStrLen = newLables.get(0).length();
+            mLabels = new String[newLables.size()];
+            for (int i = 0; i < newLables.size(); i++) {
+                mLabels[i] = newLables.get(i);
+                if(newLables.get(i).length() > mMaxStrLen) {
+                    mMaxStrLen = newLables.get(i).length();
+                }
+            }
+        }
+
+        public int getMaxStrLen() {
+            return mMaxStrLen;
+        }
+    }
+
     private RunNetworkThread networkthread;
     private LinearLayout pcLayout;
     private MyHandler handler;
@@ -189,7 +229,17 @@ public class PerfMon extends Activity {
         renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.FIXED_WIDTH);
         renderer.setBarWidth(50);
         renderer.setBarGap(1);
-        mFormatter.setPointLabeler();
+
+        XLabelFormatter labelFormatter = new XLabelFormatter();
+        labelFormatter.setLabels(keys);
+        int strlen = labelFormatter.getMaxStrLen();
+        mPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 0.5);
+        mPlot.setDomainValueFormat(labelFormatter);
+        mPlot.getGraphWidget().setDomainLabelOrientation(-90f);
+        mPlot.getGraphWidget().setDomainLabelVerticalOffset(-25f);
+        mPlot.getGraphWidget().getDomainLabelPaint().setTextAlign(Paint.Align.RIGHT);
+        mPlot.getGraphWidget().setMarginBottom(15f*strlen);
+        mPlot.getGraphWidget().refreshLayout();
 
         mPlot.redraw();
     }
@@ -235,8 +285,7 @@ public class PerfMon extends Activity {
 
         ArrayList<String> knobArray = new ArrayList<>();
         for (Map.Entry<String, RPCConnection.KnobInfo> e : x.entrySet()) {
-            Log.d("PerfMon", e.getKey() + ": " + e.getValue().value);
-
+            //Log.d("PerfMon", e.getKey() + ": " + e.getValue().value);
             String s = e.getKey() + ": " + e.getValue().value;
             knobArray.add(s);
         }

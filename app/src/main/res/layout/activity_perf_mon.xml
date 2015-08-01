@@ -27,7 +27,6 @@
         androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
         androidPlot.graphWidget.marginTop="20dp"
         androidPlot.graphWidget.marginLeft="15dp"
-        androidPlot.graphWidget.marginBottom="25dp"
         androidPlot.graphWidget.marginRight="10dp"
         androidPlot.graphWidget.gridBackgroundPaint.color="#72706F"
         androidPlot.graphWidget.domainGridLinePaint.alpha="0"
