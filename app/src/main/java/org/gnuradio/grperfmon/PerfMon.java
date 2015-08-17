@@ -223,6 +223,7 @@ public class PerfMon extends Activity {
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
 
         // Plot the per cent series
+
         mPlot.addSeries(series, mFormatter);
         BarRenderer renderer = ((BarRenderer)mPlot.getRenderer(BarRenderer.class));
         renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
